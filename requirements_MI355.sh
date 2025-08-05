@@ -16,7 +16,7 @@ cd ../
 rm -rf transformers
 
 # Clone the specific Transformers release and install it
-git clone --branch v4.53-release https://github.com/kailashg26/transformers.git
+git clone https://github.com/huggingface/transformers.git
 cd transformers
 "$PYTHON" -m pip install -e .
 cd ../

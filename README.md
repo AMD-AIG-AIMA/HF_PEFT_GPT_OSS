@@ -103,10 +103,10 @@ huggingface-cli login
 # Download the checkpoint
 huggingface-cli download HUGGING_FACE_MODEL_DOWNLOAD_LINK --local-dir ./models/MODEL_NAME
 
-#For example, to dowbload 20B model
+#For example, to download 20B model
 huggingface-cli download openai/gpt-oss-20b --local-dir ./models/gpt-oss-20b
 
-#For example, to dowbload 120B model
+#For example, to download 120B model
 huggingface-cli download openai/gpt-oss-120b --local-dir ./models/gpt-oss-120b
 ```
 

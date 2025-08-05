@@ -165,9 +165,3 @@ docker image rm rocm/7.0-preview:rocm7.0_preview_pytorch_training_mi35X_alpha
 
 ---
 
-## Future Updates
-
-Once OpenAI releases official support for GPT OSS MoE blocks in Hugging Face Transformers:
-
-- You can continue using any Transformers version ≥ 4.53.0 without manual patches.
-- The native `openai_moe` architecture and `OpenAIMoeForCausalLM` classes will be available by default.

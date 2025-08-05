@@ -149,9 +149,14 @@ def main(model_args, data_args, training_args):
     set_seed(training_args.seed)
 
     # model
-    model, peft_config, tokenizer = create_and_prepare_model(
-        model_args, data_args, training_args
-    )
+    # model, peft_config, tokenizer = create_and_prepare_model(
+    #     model_args, data_args, training_args
+    # )
+
+    model, peft_config, tokenizer = create_and_prepare_model(model_args, data_args, training_args)
+    # make sure every parameter is the same dtype for FSDP flatten
+    # here we choose bfloat16 because your base model is in bf16 already
+    model = model.to(torch.bfloat16)
 
     # gradient ckpt
     model.config.use_cache = not training_args.gradient_checkpointing

@@ -144,16 +144,44 @@ def create_and_prepare_model(args, data_args, training_args):
             dtype=None,
             load_in_4bit=load_in_4bit,
         )
+    # else:
+    #     torch_dtype = quant_storage_stype if quant_storage_stype and quant_storage_stype.is_floating_point else torch.float32
+    #     model = AutoModelForCausalLM.from_pretrained(
+    #         args.model_name_or_path,
+    #         load_in_8bit=load_in_8bit,
+    #         quantization_config=bnb_config,
+    #         trust_remote_code=True,
+    #         attn_implementation="flash_attention_2" if args.use_flash_attn else "eager",
+    #         torch_dtype=torch_dtype,
+    #     )
     else:
-        torch_dtype = quant_storage_stype if quant_storage_stype and quant_storage_stype.is_floating_point else torch.float32
+        # Determine the dtype for the model's parameters/weights
+        torch_dtype = (
+            quant_storage_stype
+            if (quant_storage_stype and quant_storage_stype.is_floating_point)
+            else torch.float32
+        )
+
+        # Build your HF kwargs dict without quantization_config first
+        hf_kwargs = {
+            "load_in_8bit": load_in_8bit,
+            "trust_remote_code": True,
+            "attn_implementation": "flash_attention_2"
+                                   if args.use_flash_attn
+                                   else "eager",
+            "torch_dtype": torch_dtype,
+        }
+
+        # Only include the quantization_config if it was set up above
+        if bnb_config is not None:
+            hf_kwargs["quantization_config"] = bnb_config
+
+        # Now call from_pretrained with the dynamically built kwargs
         model = AutoModelForCausalLM.from_pretrained(
             args.model_name_or_path,
-            load_in_8bit=load_in_8bit,
-            quantization_config=bnb_config,
-            trust_remote_code=True,
-            attn_implementation="flash_attention_2" if args.use_flash_attn else "eager",
-            torch_dtype=torch_dtype,
+            **hf_kwargs,
         )
+
 
     peft_config = None
     chat_template = None

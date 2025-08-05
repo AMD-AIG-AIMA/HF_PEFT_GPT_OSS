@@ -10,6 +10,9 @@ Training is performed via Accelerate with FSDP in bfloat16 (gradient checkpointi
 
 UltraChat 200k is a heavily filtered, 200 000-example subset of the original UltraChat pool (≈ 1.4 million ChatGPT-generated multi-turn dialogues). To create it, examples were selected for supervised fine-tuning, true-casing was applied to fix capitalization errors, and any assistant replies that merely disclaim opinions or emotions were removed.
 
+`gpt-oss-120b` — for production, general purpose, high reasoning use cases that fits into a single MI300 GPU (117B parameters with 5.1B active parameters)
+`gpt-oss-20b` — for lower latency, and local or specialized use cases (21B parameters with 3.6B active parameters)
+
 The dataset is stored in Parquet format with each entry using the following schema:
 
 - `prompt`
@@ -98,6 +101,12 @@ huggingface-cli login
 
 # Download the checkpoint
 huggingface-cli download HUGGING_FACE_MODEL_DOWNLOAD_LINK --local-dir ./models/MODEL_NAME
+
+#For example, to dowbload 20B model
+huggingface-cli download openai/gpt-oss-20b --local-dir ./models/gpt-oss-20b
+
+#For example, to dowbload 120B model
+huggingface-cli download openai/gpt-oss-120b --local-dir ./models/gpt-oss-120b
 ```
 
 - You can rename `MODEL_NAME` to whatever you prefer.

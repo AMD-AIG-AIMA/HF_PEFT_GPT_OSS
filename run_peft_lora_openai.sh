@@ -1,0 +1,37 @@
+accelerate launch --config_file "configs/fsdp_config.yaml"  train.py \
+--seed 100 \
+--model_name_or_path "/workspace/models/MODEL_NAME" \
+--dataset_name "HuggingFaceH4/ultrachat_200k" \
+--chat_template_format "chatml" \
+--add_special_tokens False \
+--append_concat_token False \
+--splits "train_sft,test_sft" \
+--max_seq_len 4096 \
+--max_steps 100 \
+--num_train_epochs 4 \
+--logging_steps 5 \
+--log_level "info" \
+--logging_strategy "steps" \
+--hub_private_repo False \
+--hub_strategy "every_save" \
+--bf16 True \
+--packing True \
+--learning_rate 1e-4 \
+--lr_scheduler_type "cosine" \
+--weight_decay 1e-4 \
+--warmup_ratio 0.0 \
+--max_grad_norm 1.0 \
+--output_dir "openai-moe-4kseq-4bs-gas4-lora" \
+--per_device_train_batch_size 4 \
+--per_device_eval_batch_size 4 \
+--gradient_accumulation_steps 4 \
+--gradient_checkpointing True \
+--use_reentrant False \
+--dataset_text_field "content" \
+--use_flash_attn False \
+--use_peft_lora True \
+--lora_r 8 \
+--lora_alpha 16 \
+--lora_dropout 0.1 \
+--lora_target_modules "q_proj,k_proj,v_proj,o_proj,down_proj,up_proj,gate_proj" \
+--use_4bit_quantization False

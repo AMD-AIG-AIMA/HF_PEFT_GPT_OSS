@@ -87,14 +87,8 @@ docker run -it \
 
 All commands below apply to both MI300X and MI355X.
 
-### Optional (for Transformers ≤ 4.53.0)
-If you're using Transformers v4.53.0 or earlier, or running the model through a proxy `transformers` wrapper, you may need to patch the model config.  
-Open `models/MODEL_NAME/config.json` and add:
-```json
-"architectures": ["MixtralSparseMoeBlock"],
-"model_type": "mixtral"
-```
-For Transformers versions ≥ 4.53.0, native OpenAI MoE support is available, so this step can be skipped.
+> ⚠️ **Note on Transformers:**
+> Starting from version 4.55.0.dev0 of the Transformers library, built-in OpenAI Mixture of Experts (MoE) support is now available.
 
 
 ```bash

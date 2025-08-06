@@ -162,6 +162,11 @@ def create_and_prepare_model(args, data_args, training_args):
             else torch.float32
         )
 
+        if bnb_config is None:
+            # ensure it's never None
+            bnb_config = {}
+
+
         # Build your HF kwargs dict without quantization_config first
         hf_kwargs = {
             "load_in_8bit": load_in_8bit,
@@ -170,6 +175,7 @@ def create_and_prepare_model(args, data_args, training_args):
                                    if args.use_flash_attn
                                    else "eager",
             "torch_dtype": torch_dtype,
+            "quantization_config": bnb_config,
         }
 
         # Only include the quantization_config if it was set up above

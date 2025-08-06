@@ -144,6 +144,33 @@ def create_and_prepare_model(args, data_args, training_args):
             dtype=None,
             load_in_4bit=load_in_4bit,
         )
+    else:
+        # Determine the dtype for the model's parameters/weights
+        torch_dtype = (
+            quant_storage_stype
+            if (quant_storage_stype and quant_storage_stype.is_floating_point)
+            else torch.float32
+        )
+    
+        # Build your 🤗 kwargs dict without quantization_config first
+        hf_kwargs = {
+            "load_in_8bit": load_in_8bit,
+            "trust_remote_code": True,
+            "attn_implementation": "flash_attention_2"
+                                   if args.use_flash_attn
+                                   else "eager",
+            "torch_dtype": torch_dtype,
+        }
+    
+        # Only include quantization_config if it's a real BitsAndBytesConfig
+        if isinstance(bnb_config, BitsAndBytesConfig):
+            hf_kwargs["quantization_config"] = bnb_config
+    
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model_name_or_path,
+            **hf_kwargs,
+        )
+
     # else:
     #     torch_dtype = quant_storage_stype if quant_storage_stype and quant_storage_stype.is_floating_point else torch.float32
     #     model = AutoModelForCausalLM.from_pretrained(
@@ -154,39 +181,39 @@ def create_and_prepare_model(args, data_args, training_args):
     #         attn_implementation="flash_attention_2" if args.use_flash_attn else "eager",
     #         torch_dtype=torch_dtype,
     #     )
-    else:
-        # Determine the dtype for the model's parameters/weights
-        torch_dtype = (
-            quant_storage_stype
-            if (quant_storage_stype and quant_storage_stype.is_floating_point)
-            else torch.float32
-        )
+    # else:
+    #     # Determine the dtype for the model's parameters/weights
+    #     torch_dtype = (
+    #         quant_storage_stype
+    #         if (quant_storage_stype and quant_storage_stype.is_floating_point)
+    #         else torch.float32
+    #     )
 
-        if bnb_config is None:
-            # ensure it's never None
-            bnb_config = {}
+    #     # if bnb_config is None:
+    #     #     # ensure it's never None
+    #     #     bnb_config = {}
 
 
-        # Build your HF kwargs dict without quantization_config first
-        hf_kwargs = {
-            "load_in_8bit": load_in_8bit,
-            "trust_remote_code": True,
-            "attn_implementation": "flash_attention_2"
-                                   if args.use_flash_attn
-                                   else "eager",
-            "torch_dtype": torch_dtype,
-            "quantization_config": bnb_config,
-        }
+    #     # Build your HF kwargs dict without quantization_config first
+    #     hf_kwargs = {
+    #         "load_in_8bit": load_in_8bit,
+    #         "trust_remote_code": True,
+    #         "attn_implementation": "flash_attention_2"
+    #                                if args.use_flash_attn
+    #                                else "eager",
+    #         "torch_dtype": torch_dtype,
+    #         "quantization_config": bnb_config,
+    #     }
 
-        # Only include the quantization_config if it was set up above
-        if bnb_config is not None:
-            hf_kwargs["quantization_config"] = bnb_config
+    #     # Only include the quantization_config if it was set up above
+    #     if bnb_config is not None:
+    #         hf_kwargs["quantization_config"] = bnb_config
 
-        # Now call from_pretrained with the dynamically built kwargs
-        model = AutoModelForCausalLM.from_pretrained(
-            args.model_name_or_path,
-            **hf_kwargs,
-        )
+    #     # Now call from_pretrained with the dynamically built kwargs
+    #     model = AutoModelForCausalLM.from_pretrained(
+    #         args.model_name_or_path,
+    #         **hf_kwargs,
+    #     )
 
 
     peft_config = None

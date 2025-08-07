@@ -8,21 +8,11 @@ PYTHON=python3
 # Ensure pip is up to date
 "$PYTHON" -m pip install --upgrade pip
 
-# Uninstall existing transformers if any
-"$PYTHON" -m pip uninstall -y transformers || true
+# Uninstall any existing versions
+python3 -m pip uninstall -y transformers accelerate
 
-cd ../
+# Install the exact versions you want
+python3 -m pip install transformers==4.55.0 accelerate==1.9.0
 
-# Remove any existing clone to ensure a fresh git clone
-rm -rf transformers
-
-# Clone the specific Transformers release and install it
-git clone https://github.com/huggingface/transformers.git
-cd transformers
-"$PYTHON" -m pip install -e .
-cd ../
-
-# Upgrade accelerate
-"$PYTHON" -m pip install --upgrade accelerate
 
 echo "All Packages Installed for MI300!"

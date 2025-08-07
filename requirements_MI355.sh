@@ -7,19 +7,14 @@ PYTHON=python3  # adjust if you need a specific python
 # Upgrade pip first
 "$PYTHON" -m pip install --upgrade pip
 
-# Uninstall any existing transformers
-"$PYTHON" -m pip uninstall -y transformers || true
+# Ensure pip is up to date
+"$PYTHON" -m pip install --upgrade pip
 
-cd ../
+# Uninstall any existing versions
+"$PYTHON" -m pip uninstall -y transformers accelerate
 
-# Remove any existing clone to ensure a fresh git clone
-rm -rf transformers
-
-# Clone the specific Transformers release and install it
-git clone https://github.com/huggingface/transformers.git
-cd transformers
-"$PYTHON" -m pip install -e .
-cd ../
+# Install the exact versions you want
+"$PYTHON" -m pip install transformers==4.55.0 accelerate==1.9.0
 
 # Install PEFT
 "$PYTHON" -m pip install peft

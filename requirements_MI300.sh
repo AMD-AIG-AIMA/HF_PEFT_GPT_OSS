@@ -9,10 +9,10 @@ PYTHON=python3
 "$PYTHON" -m pip install --upgrade pip
 
 # Uninstall any existing versions
-python3 -m pip uninstall -y transformers accelerate
+"$PYTHON" -m pip uninstall -y transformers accelerate
 
 # Install the exact versions you want
-python3 -m pip install transformers==4.55.0 accelerate==1.9.0
+"$PYTHON" -m pip install transformers==4.55.0 accelerate==1.9.0
 
 
 echo "All Packages Installed for MI300!"

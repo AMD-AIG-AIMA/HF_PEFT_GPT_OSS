@@ -7,9 +7,6 @@ PYTHON=python3  # adjust if you need a specific python
 # Upgrade pip first
 "$PYTHON" -m pip install --upgrade pip
 
-# Ensure pip is up to date
-"$PYTHON" -m pip install --upgrade pip
-
 # Uninstall any existing versions
 "$PYTHON" -m pip uninstall -y transformers accelerate
 

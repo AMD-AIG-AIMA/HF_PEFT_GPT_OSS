@@ -120,7 +120,7 @@ huggingface-cli download openai/gpt-oss-120b --local-dir ./models/gpt-oss-120b
 cd /workspace/
 
 # Clone the repository
-git clone https://github.com/kailashg26/HF_PEFT_GPT_OSS.git
+git clone https://github.com/AMD-AIG-AIMA/HF_PEFT_GPT_OSS.git
 cd HF_PEFT_GPT_OSS
 
 # For MI300X, upgrade required libraries
